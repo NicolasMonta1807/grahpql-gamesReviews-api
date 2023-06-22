@@ -7,7 +7,7 @@ const resolvers = {
       return await Game.collection.countDocuments()
     },
     allGames: async () => {
-      return await Game.find({})
+      return await Game.find({}).populate('reviews', { game: 0 })
     }
   },
   Mutation: {

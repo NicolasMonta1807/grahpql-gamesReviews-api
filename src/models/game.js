@@ -16,14 +16,18 @@ const gameSchema = new mongoose.Schema({
   publisher: {
     type: String,
     required: true
-  }
+  },
+  reviews: [{
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Review'
+  }]
 })
 
 gameSchema.set('toJSON', {
   transform: (doc, ret) => {
-    ret.id = doc._id
-    delete doc._id
-    delete doc.__v
+    ret.id = ret._id
+    delete ret.id
+    delete ret.__v
   }
 })
 

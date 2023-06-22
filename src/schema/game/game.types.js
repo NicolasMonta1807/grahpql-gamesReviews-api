@@ -14,6 +14,7 @@ const typeDefs = gql`
     publisher: String!
     releaseDate: Date!
     id: String!
+    reviews: [Review!]
   }
 
   type Mutation {
