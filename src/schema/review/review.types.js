@@ -15,6 +15,7 @@ const typeDefs = gql`
     publishDate: Date!
     game: Game!
     timePlayed: Int
+    id: String!
   }
 
   type Mutation {
