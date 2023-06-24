@@ -1,5 +1,6 @@
 const gameResolvers = require('./game').resolvers
 const reviewResolvers = require('./review').resolvers
+const userResolvers = require('./user').resolvers
 
 const resolvers = {
   Query: {
@@ -8,7 +9,8 @@ const resolvers = {
   },
   Mutation: {
     ...gameResolvers.Mutation,
-    ...reviewResolvers.Mutation
+    ...reviewResolvers.Mutation,
+    ...userResolvers.Mutation
   }
 }
 
