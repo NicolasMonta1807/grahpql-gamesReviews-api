@@ -5,7 +5,8 @@ const userResolvers = require('./user').resolvers
 const resolvers = {
   Query: {
     ...gameResolvers.Query,
-    ...reviewResolvers.Query
+    ...reviewResolvers.Query,
+    ...userResolvers.Query
   },
   Mutation: {
     ...gameResolvers.Mutation,

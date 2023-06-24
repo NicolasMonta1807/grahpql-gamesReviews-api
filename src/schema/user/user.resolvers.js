@@ -4,6 +4,11 @@ const User = require('../../models/user')
 const { SECRET } = require('../../middleware/config')
 
 const resolvers = {
+  Query: {
+    me: (root, args, context) => {
+      return context.currentUser
+    }
+  },
   Mutation: {
     createUser: async (root, args) => {
       const { username, password } = args
