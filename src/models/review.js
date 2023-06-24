@@ -10,10 +10,10 @@ const reviewSchema = new mongoose.Schema({
     required: true,
     minLength: 20
   },
-  username: {
-    type: String,
-    required: true,
-    minLengt: 6
+  user: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'User',
+    required: true
   },
   score: {
     type: Number,

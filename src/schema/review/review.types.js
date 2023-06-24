@@ -10,7 +10,7 @@ const typeDefs = gql`
   type Review {
     title: String!
     content: String!
-    username: String!
+    user: User!
     score: Int!
     publishDate: Date!
     game: Game!
@@ -22,7 +22,6 @@ const typeDefs = gql`
     addReview (
       title: String!
       content: String!
-      username: String!
       score: Int!
       gameId: String!
       timePlayed: Int
