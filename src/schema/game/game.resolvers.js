@@ -1,5 +1,6 @@
 const Game = require('../../models/game')
 const dateResolver = require('../helpers/date')
+const { GraphQLError } = require('graphql')
 
 const resolvers = {
   Query: {
@@ -12,8 +13,14 @@ const resolvers = {
   },
   Mutation: {
     addGame: async (root, args) => {
-      const game = new Game({ ...args })
-      return await game.save()
+      try {
+        const game = new Game({ ...args })
+        return await game.save()
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          code: error.name
+        })
+      }
     }
   },
   Date: dateResolver

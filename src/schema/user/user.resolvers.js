@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../../models/user')
 const { SECRET } = require('../../middleware/config')
+const { GraphQLError } = require('graphql')
 
 const resolvers = {
   Query: {
@@ -12,23 +13,30 @@ const resolvers = {
   Mutation: {
     createUser: async (root, args) => {
       const { username, password } = args
+      const existingUser = await User.findOne({ username })
+
+      if (existingUser) {
+        throw new GraphQLError('Username already exists', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.username
+          }
+        })
+      }
+
       try {
-        const existingUser = await User.findOne({ username })
-
-        if (existingUser) {
-          throw new Error('Username already exists')
-        }
-
         const passwordHash = await bcrypt.hash(password, 10)
-
         const newUser = new User({
           username,
           passwordHash
         })
-
         return newUser.save()
       } catch (error) {
-        throw new Error(`Failed to create user: ${error.message}`)
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: error.name
+          }
+        })
       }
     },
     login: async (root, args) => {
@@ -40,15 +48,26 @@ const resolvers = {
         : await bcrypt.compare(password, user.passwordHash)
 
       if (!(user && passwordCorrect)) {
-        throw new Error('Wrong credentials')
+        throw new GraphQLError('Wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })
       }
 
-      const userForToken = {
-        username,
-        id: user.id
+      try {
+        const userForToken = {
+          username,
+          id: user.id
+        }
+        return { value: jwt.sign(userForToken, SECRET) }
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: error.name
+          }
+        })
       }
-
-      return { value: jwt.sign(userForToken, SECRET) }
     }
   }
 }
